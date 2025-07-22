@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional, Union
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, field_serializer
 from app.domain.models.object_id import ObjectId
 import re as regular_expression
 
@@ -64,7 +64,6 @@ class Movie(BaseModel):
             return list(set(genre))
         raise ValueError('Genre must be a string or a list of strings')
 
-    class Config:
-        json_encoders = {
-            ObjectId: str
-        }
+    @field_serializer('id', when_used='json')
+    def serialize_object_id(self, obj_id: Optional[ObjectId], _info) -> str | None:
+        return str(obj_id) if obj_id else None
