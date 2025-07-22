@@ -1,4 +1,4 @@
-from config import create_app
+from app.config import create_app
 
 
 if __name__ == "__main__":
