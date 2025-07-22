@@ -1,0 +1,11 @@
+# VSCODE
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+
+# Dotenv
+.env
