@@ -3,7 +3,6 @@ from pymongo.database import Database
 import os
 from dotenv import load_dotenv
 
-# Detect enviroment
 env = os.getenv("ENVIRONMENT", "local")
 
 if env == "test":

@@ -8,7 +8,7 @@ def create_app() -> Flask:
     CORS(application)
     application.register_blueprint(router)
 
-    # Desactiva el banner de Flask (opcional)
+    # Deactivate Flask's default logging
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 
