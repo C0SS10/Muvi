@@ -11,8 +11,10 @@ if env == "test":
 else:
     load_dotenv(".env.local")
 
-MONGODB_URI = os.getenv("MONGODB_URL")
+MONGODB_URI = os.getenv("MONGODB_URI")
 DATABASE_NAME = os.getenv("MONGODB_DATABASE_NAME")
 
 mongodb_client = MongoClient(MONGODB_URI)
+print(mongodb_client.server_info())
 database: Database = mongodb_client.get_database(DATABASE_NAME)
+print(database.name)
