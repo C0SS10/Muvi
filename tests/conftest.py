@@ -1,11 +1,10 @@
 import os
+from dotenv import load_dotenv
 from pytest import fixture
 from app.config import create_app
-import os
 
-@fixture(scope="session", autouse=True)
-def set_test_environment():
-    os.environ["ENVIRONMENT"] = "test"
+load_dotenv(".env.test", override=True)
+os.environ["ENVIRONMENT"] = "test"
 
 @fixture()
 def app():
