@@ -18,9 +18,9 @@ class Movie(BaseModel):
     @classmethod
     def validate_release_date(cls, release_date: str) -> datetime:
         try:
-            return datetime.strptime(release_date, '%Y-%m-%d')
+            return datetime.strptime(release_date, '%Y')
         except ValueError:
-            raise ValueError("Release date must be in the format YYYY-MM-DD")
+            raise ValueError("Release date must be in the format YYYY")
 
     @field_validator('poster')
     @classmethod
