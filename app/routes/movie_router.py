@@ -9,21 +9,35 @@ movie_router = Blueprint('movies', __name__)
 @movie_router.route('/', methods=['POST'])
 def create_movie() -> Tuple[Response, int] | Response:
         movie_service = MovieService(MongoMovieRepository())
+        
+        if not request.get_json():
+                return jsonify({"message": "No movie provided"}), 422
+        
         movie = request.get_json()
 
-        if isinstance(movie, list) or (isinstance(movie, dict) and len(movie) > 1):
+        if isinstance(movie, list):
                 return redirect(url_for('router.movies.create_movies'), code=307)
 
-        response_message, status_code = movie_service.add_movie(movie)
-        return jsonify({"message": response_message}), status_code
+        try:
+                response_message, status_code = movie_service.add_movie(movie)
+                return jsonify({"message": response_message}), status_code
+        except Exception:
+                return jsonify({"message": "Internal server error"}), 500
 
 @movie_router.route('/insert-many', methods=['POST'])
 def create_movies() -> Tuple[Response, int] | Response:
         movie_service = MovieService(MongoMovieRepository())
+
+        if not request.get_json():
+            return jsonify({"message": "No movies provided"}), 422
+        
         movies = request.get_json()
 
         if isinstance(movies, dict) or (isinstance(movies, list) and len(movies) == 1):
                 return redirect(url_for('router.movies.create_movie'), code=307)
 
-        response_message, status_code = movie_service.add_many_movies(movies)
-        return jsonify({"message": response_message}), status_code
+        try:
+                response_message, status_code = movie_service.add_many_movies(movies)
+                return jsonify({"message": response_message}), status_code
+        except Exception:
+                return jsonify({"message": "Internal server error"}), 500
