@@ -8,5 +8,5 @@ class MovieRepository(ABC):
         pass
 
     @abstractmethod
-    def insert_movies(self, movies_dict: List[Dict]) -> List[str]:
+    def insert_many_movies(self, movies_dict: List[Dict]) -> List[str]:
         pass

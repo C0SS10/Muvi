@@ -1,4 +1,4 @@
-def test_add_movies_success(client):
+def test_add_many_movies_success(client):
     # Arrange
     payload = [
         {

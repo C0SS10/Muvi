@@ -7,9 +7,13 @@ from app.infrastructure.mongo_movie_repository import MongoMovieRepository
 movie_router = Blueprint('movies', __name__)
 
 @movie_router.route('/', methods=['POST'])
-def create_movie() -> Tuple[Response, int]:
+def create_movie() -> Tuple[Response, int] | Response:
         movie_service = MovieService(MongoMovieRepository())
         movie = request.get_json()
+
+        if isinstance(movie, list) or (isinstance(movie, dict) and len(movie) > 1):
+                return redirect(url_for('router.movies.create_movies'), code=307)
+
         response_message, status_code = movie_service.add_movie(movie)
         return jsonify({"message": response_message}), status_code
 
@@ -21,5 +25,5 @@ def create_movies() -> Tuple[Response, int] | Response:
         if isinstance(movies, dict) or (isinstance(movies, list) and len(movies) == 1):
                 return redirect(url_for('router.movies.create_movie'), code=307)
 
-        response_message, status_code = movie_service.add_movies(movies)
+        response_message, status_code = movie_service.add_many_movies(movies)
         return jsonify({"message": response_message}), status_code

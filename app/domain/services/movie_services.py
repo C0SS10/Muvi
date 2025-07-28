@@ -19,11 +19,11 @@ class MovieService:
 
             return message, 422
         
-    def add_movies(self, movies: List[Dict]) -> Tuple[str, int]:
+    def add_many_movies(self, movies: List[Dict]) -> Tuple[str, int]:
         try:
             movies_validated = [Movie(**movie) for movie in movies]
             movies_dict = [movie.model_dump(exclude={"id"}) for movie in movies_validated]
-            movies_ids = self._repository.insert_movies(movies_dict)
+            movies_ids = self._repository.insert_many_movies(movies_dict)
 
             return f"Movies created with IDs: {', '.join(movies_ids)}", 201
         except ValidationError as error:
