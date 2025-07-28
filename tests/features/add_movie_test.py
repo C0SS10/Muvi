@@ -3,7 +3,11 @@ def test_add_movie_success(client):
     payload = {
         "title": "Interstellar",
         "plot": "A team of explorers travel through a wormhole in space...",
+<<<<<<< HEAD
         "release_date": "2014",
+=======
+        "release_date": "2014-11-07",
+>>>>>>> e54b8020c0ccee716c8fb91f85c952f5b042c0c4
         "genre": ["Sci-Fi", "Adventure"],
         "director": ["Christopher Nolan"],
         "rating": 4.9,
@@ -45,7 +49,11 @@ def test_add_movie_invalid_rating(client):
     payload = {
         "title": "Bad Rating",
         "plot": "Plot",
+<<<<<<< HEAD
         "release_date": "2014",
+=======
+        "release_date": "2014-11-07",
+>>>>>>> e54b8020c0ccee716c8fb91f85c952f5b042c0c4
         "genre": "Drama",
         "director": "Someone",
         "rating": 6.0,  # Invalid rating > 5
@@ -65,7 +73,11 @@ def test_add_movie_invalid_poster_url(client):
     payload = {
         "title": "Bad Poster",
         "plot": "Plot",
+<<<<<<< HEAD
         "release_date": "2014",
+=======
+        "release_date": "2014-11-07",
+>>>>>>> e54b8020c0ccee716c8fb91f85c952f5b042c0c4
         "genre": "Thriller",
         "director": "Someone",
         "rating": 4.5,
@@ -85,7 +97,11 @@ def test_add_movie_duplicate_genres_and_directors(client):
     payload = {
         "title": "Duplicated Fields",
         "plot": "Plot",
+<<<<<<< HEAD
         "release_date": "2020",
+=======
+        "release_date": "2020-01-01",
+>>>>>>> e54b8020c0ccee716c8fb91f85c952f5b042c0c4
         "genre": ["Drama", "Drama", "Action"],
         "director": ["Nolan", "Nolan"],
         "rating": 3.5,
