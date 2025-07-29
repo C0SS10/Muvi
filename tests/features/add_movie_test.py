@@ -1,6 +1,8 @@
 from unittest.mock import patch
 import pytest
 
+POSTER_URL_TEST = "https://m.media-amazon.com/images/I/abc.jpg"
+ENDPOINT = "/api/movies"
 
 def test_add_movie_success(client):
     # Arrange
@@ -11,11 +13,11 @@ def test_add_movie_success(client):
         "genre": ["Sci-Fi", "Adventure"],
         "director": ["Christopher Nolan"],
         "rating": 4.9,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     assert response.status_code == 201
@@ -33,11 +35,11 @@ def test_add_movie_invalid_release_date(client):
         "genre": ["Drama"],
         "director": "Some Director",
         "rating": 4.0,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     assert response.status_code == 422
@@ -53,11 +55,11 @@ def test_add_movie_invalid_rating_values(client, rating):
         "genre": ["Drama"],
         "director": ["Someone"],
         "rating": rating,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     if 0 <= rating <= 5 and isinstance(rating, (int, float)):
@@ -80,7 +82,7 @@ def test_add_movie_invalid_poster_url(client):
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     assert response.status_code == 422
@@ -96,11 +98,11 @@ def test_add_movie_duplicate_genres_and_directors(client):
         "genre": ["Drama", "Drama", "Action"],
         "director": ["Nolan", "Nolan"],
         "rating": 3.5,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     assert response.status_code == 201
@@ -116,7 +118,7 @@ def test_add_movie_missing_fields(client):
     }
 
     # Act
-    response = client.post("/api/movies/", json=payload)
+    response = client.post(ENDPOINT, json=payload)
 
     # Assert
     assert response.status_code == 422
@@ -130,13 +132,13 @@ def test_add_movie_internal_error(client):
         "genre": ["Drama"],
         "director": ["Someone"],
         "rating": 4.0,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }
 
     with patch('app.domain.services.movie_services.MovieService.add_movie') as mock_add:
         mock_add.side_effect = Exception("Database error")
 
-        response = client.post("/api/movies/", json=payload)
+        response = client.post(ENDPOINT, json=payload)
         assert response.status_code == 500
         assert "Internal server error" in response.get_data(as_text=True)
 
@@ -150,7 +152,7 @@ def test_add_movie_duplicate_movies(client):
         "genre": ["Drama"],
         "director": ["Someone"],
         "rating": 4.0,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }, {
         "title": "Duplicate Title",
         "plot": "Test",
@@ -158,11 +160,11 @@ def test_add_movie_duplicate_movies(client):
         "genre": ["Drama"],
         "director": ["Someone"],
         "rating": 4.0,
-        "poster": "https://m.media-amazon.com/images/I/abc.jpg"
+        "poster": POSTER_URL_TEST
     }]
 
-    client.post("/api/movies/", json=payload)
-    response = client.post("/api/movies/", json=payload)
+    client.post(ENDPOINT, json=payload)
+    response = client.post(ENDPOINT, json=payload)
     assert response.status_code == 409
     assert "already exists" in response.get_data(as_text=True)
  """
