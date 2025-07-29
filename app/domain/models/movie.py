@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 from pydantic import BaseModel, field_validator, field_serializer
 from app.domain.models.object_id import ObjectId
 import re as regular_expression
 
 class Movie(BaseModel):
-    id: Optional[ObjectId] = None
+    id: Optional[ObjectId] | str = None
     title: str
     plot: str
     release_date: datetime
@@ -17,6 +17,9 @@ class Movie(BaseModel):
     @field_validator('release_date', mode='before')
     @classmethod
     def validate_release_date(cls, release_date: str) -> datetime:
+        if isinstance(release_date, datetime):
+            return release_date
+
         try:
             return datetime.strptime(release_date, '%Y')
         except ValueError:
@@ -67,3 +70,11 @@ class Movie(BaseModel):
     @field_serializer('id', when_used='json')
     def serialize_object_id(self, obj_id: Optional[ObjectId], _info) -> str | None:
         return str(obj_id) if obj_id else None
+    
+    @classmethod
+    def from_mongo(cls, mongo_document: Dict) -> "Movie":
+        # Convert MongoDB document to Movie instance
+        return cls(
+            id=str(mongo_document.get('_id')),
+            **{key: value for key, value in mongo_document.items() if key != '_id'}
+        )
