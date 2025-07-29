@@ -30,3 +30,7 @@ class MovieService:
             message = error.errors()[0].get("msg", "Invalid data")
 
             return message, 422
+    
+    def get_all_movies(self) -> List[Movie]:
+        movies = self._repository.get_all_movies()
+        return movies          
