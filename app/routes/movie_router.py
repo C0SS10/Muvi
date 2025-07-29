@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, request, jsonify, url_for
 from werkzeug.wrappers.response import Response
 from typing import Tuple
+from app.domain.models.movie import Movie
 from app.domain.services.movie_services import MovieService
 from app.infrastructure.mongo_movie_repository import MongoMovieRepository
 
