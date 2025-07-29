@@ -3,7 +3,7 @@ import pytest
 
 # Constantes comunes
 ENDPOINT_INSERT_MANY = "/api/movies/insert-many"
-ENDPOINT_SINGLE = "/api/movies/"
+ENDPOINT_SINGLE = "/api/movies"
 POSTER_URL_1 = "https://m.media-amazon.com/images/I/abc.jpg"
 POSTER_URL_2 = "https://m.media-amazon.com/images/I/def.jpg"
 TITLE_1 = "Inception"
