@@ -31,7 +31,7 @@ class MovieService:
 
             return message, 422
     
-    def get_all_movies(self, limit: int = 10, offset: int = 0) -> List[Movie]:
+    def get_all_movies(self, limit: int, offset: int) -> List[Movie]:
         total_movies = self._repository.count_movies()
         if limit <= 0 or offset < 0 or offset >= total_movies:
             raise ValueError("Invalid pagination parameters")

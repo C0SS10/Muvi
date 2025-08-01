@@ -50,7 +50,7 @@ def create_movies() -> Tuple[Response, int] | Response:
 def get_movies() -> Tuple[Response, int]:
         movie_service = MovieService(MongoMovieRepository())
         try:
-                movies_limit = request.args.get('limit', default=8, type=int)
+                movies_limit = request.args.get('limit', default=10, type=int)
                 movies_offset = request.args.get('offset', default=0, type=int)
 
                 movies_raw = movie_service.get_all_movies(limit=movies_limit, offset=movies_offset)
