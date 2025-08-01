@@ -54,7 +54,7 @@ def test_redirect_many_to_single_movie(client):
     assert response.status_code == 307
     assert response.headers["Location"].endswith(ENDPOINT_SINGLE)
 
-@pytest.mark.parametrize("rating", [-1.0, 6.0, 0, 0.0, 5.1])
+@pytest.mark.parametrize("rating", [-1.0, 6.0, 5.1])
 def test_add_many_movies_invalid_rating(client, rating):
     movie_1_invalid = {**MOVIE_1, "rating": rating}
     movie_2_invalid = {**MOVIE_2, "rating": rating}

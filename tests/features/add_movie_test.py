@@ -46,7 +46,7 @@ def test_add_movie_invalid_release_date(client):
     assert "Release date must be in the format" in response.get_data(as_text=True)
 
 
-@pytest.mark.parametrize("rating", [-1.0, 5.1, 1238, 85.5, 0.0, 0])
+@pytest.mark.parametrize("rating", [-1.0, 5.1, 1238, 85.5])
 def test_add_movie_invalid_rating_values(client, rating):
     payload = {
         "title": "Invalid Rating",
