@@ -6,6 +6,7 @@ from app.domain.services.movie_services import MovieService
 from app.infrastructure.mongo_movie_repository import MongoMovieRepository
 
 INTERNAL_SERVER_ERROR_MSG = "Internal server error"
+PAGINATION_ERROR_MSG = "Invalid pagination parameters"
 
 movie_router = Blueprint('movies', __name__)
 
@@ -49,8 +50,13 @@ def create_movies() -> Tuple[Response, int] | Response:
 def get_movies() -> Tuple[Response, int]:
         movie_service = MovieService(MongoMovieRepository())
         try:
-                movies_raw = movie_service.get_all_movies()
+                movies_limit = request.args.get('limit', default=8, type=int)
+                movies_offset = request.args.get('offset', default=0, type=int)
+
+                movies_raw = movie_service.get_all_movies(limit=movies_limit, offset=movies_offset)
                 movies = [movie.model_dump() for movie in movies_raw]
                 return jsonify(movies), 200
+        except ValueError:
+                return jsonify({"message": PAGINATION_ERROR_MSG}), 400
         except Exception:
                 return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
