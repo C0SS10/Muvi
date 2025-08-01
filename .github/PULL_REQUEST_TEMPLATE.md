@@ -13,7 +13,7 @@
 - [ ] El código funciona y pasa los tests.
 - [ ] La base de datos de test no afecta la base de datos real.
 - [ ] La validación de datos devuelve mensajes claros.
-- [ ] Agregué o actualicé tests si fue necesario.
+- [ ] Agregué o actualicé.
 
 ## 🎯 Contexto adicional (opcional)
 
