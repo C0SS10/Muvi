@@ -14,5 +14,9 @@ class MovieRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_movies(self) -> List[Movie]:
+    def get_all_movies(self, limit: int, offset: int) -> List[Movie]:
+        pass
+
+    @abstractmethod
+    def count_movies(self) -> int:
         pass
