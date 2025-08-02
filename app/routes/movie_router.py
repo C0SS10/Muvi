@@ -50,13 +50,39 @@ def create_movies() -> Tuple[Response, int] | Response:
 def get_movies() -> Tuple[Response, int]:
         movie_service = MovieService(MongoMovieRepository())
         try:
-                movies_limit = request.args.get('limit', default=10, type=int)
-                movies_offset = request.args.get('offset', default=0, type=int)
+                filters = {}
+                for key in ['title', 'director', 'genre']:
+                        value = request.args.get(key)
+                        if value:
+                                filters[key] = value
 
-                movies_raw = movie_service.get_all_movies(limit=movies_limit, offset=movies_offset)
-                movies = [movie.model_dump() for movie in movies_raw]
-                return jsonify(movies), 200
-        except ValueError:
-                return jsonify({"message": PAGINATION_ERROR_MSG}), 400
+                # Parse year
+                year = request.args.get('year')
+                if year:
+                        try:
+                                filters['year'] = int(year)
+                        except ValueError:
+                                return jsonify({"message": "Year must be an integer"}), 400
+
+                # Parse rating
+                rating = request.args.get('rating')
+                if rating:
+                        try:
+                                filters['rating'] = float(rating)
+                        except ValueError:
+                                return jsonify({"message": "Rating must be a float"}), 400
+
+                limit = request.args.get('limit', default=10, type=int)
+                offset = request.args.get('offset', default=0, type=int)
+
+                movies = movie_service.get_movies(filters=filters, limit=limit, offset=offset)
+
+                if not movies:
+                    return jsonify({"message": "No movies found"}), 404
+
+                return jsonify([m.model_dump() for m in movies]), 200
+
+        except ValueError as e:
+                return jsonify({"message": str(e)}), 400
         except Exception:
                 return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
