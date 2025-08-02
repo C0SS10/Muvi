@@ -14,7 +14,7 @@ class MovieRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_movies(self, limit: int, offset: int) -> List[Movie]:
+    def search_movies(self, filters: Dict[str, str | None], limit: int, offset: int) -> List[Movie]:
         pass
 
     @abstractmethod
