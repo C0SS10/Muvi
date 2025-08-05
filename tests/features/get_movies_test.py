@@ -1,5 +1,6 @@
 # Constantes comunes
 ENDPOINT = "/api/movies"
+INVALID_PARAMETERS_MESSAGE = "Invalid pagination parameters"
 
 def test_get_all_movies_success(client):
     # Act
@@ -29,18 +30,18 @@ def test_get_all_movies_invalid_pagination(client):
 
     assert response.status_code == 400
     data = response.get_json()
-    assert "message" in data and data["message"] == "Invalid pagination parameters"
+    assert "message" in data and data["message"] == INVALID_PARAMETERS_MESSAGE
 
 def test_get_all_movies_invalid_query_params(client):
     response_parameters_zero = client.get("/api/movies?limit=0&offset=0")
     response_offset_negative = client.get("/api/movies?limit=2&offset=-1")
 
     data = response_parameters_zero.get_json()
-    assert "message" in data and data["message"] == "Invalid pagination parameters"
+    assert "message" in data and data["message"] == INVALID_PARAMETERS_MESSAGE
     assert response_parameters_zero.status_code == 400
 
     data = response_offset_negative.get_json()
-    assert "message" in data and data["message"] == "Invalid pagination parameters"
+    assert "message" in data and data["message"] == INVALID_PARAMETERS_MESSAGE
     assert response_offset_negative.status_code == 400
 
 def test_get_movies_with_filters(client):
