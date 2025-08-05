@@ -4,6 +4,7 @@ from app.domain.models.movie import Movie
 from app.domain.repositories.movie_repository import MovieRepository
 from app.infrastructure.mongo_connection import database
 from typing import Dict, List
+from bson import ObjectId
 
 class MongoMovieRepository(MovieRepository):
     def insert_movie(self, movie_dict: Dict) -> str:
@@ -46,3 +47,9 @@ class MongoMovieRepository(MovieRepository):
 
     def count_movies(self) -> int:
         return database.movies.count_documents({})
+    
+    def get_movie_by_id(self, id: str) -> Movie | None:
+        document = database.movies.find_one({"_id": ObjectId(id)})
+        if document:
+            return Movie.from_mongo(document)
+        return None

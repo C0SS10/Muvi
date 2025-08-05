@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, redirect, request, jsonify, url_for
 from werkzeug.wrappers.response import Response
 from typing import Tuple
@@ -84,5 +85,20 @@ def get_movies() -> Tuple[Response, int]:
 
         except ValueError as e:
                 return jsonify({"message": str(e)}), 400
+        except Exception:
+                return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
+
+@movie_router.route('/<id>', methods=['GET'])
+def get_movie_by_id(id: ObjectId) -> Tuple[Response, int]:
+        movie_service = MovieService(MongoMovieRepository())
+        try:
+                movie = movie_service.get_movie_by_id(id)
+                
+                if not movie:
+                        return jsonify({"message": "Movie not found"}), 404
+
+                return jsonify(movie.model_dump()), 200
+        except ValueError:
+                return jsonify({"message": "Invalid movie ID"}), 400
         except Exception:
                 return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
