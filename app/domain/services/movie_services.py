@@ -1,5 +1,6 @@
 from app.domain.models.movie import Movie
 from typing import List, Tuple, Dict
+from bson import ObjectId
 from pydantic import ValidationError
 from app.domain.repositories.movie_repository import MovieRepository
 
@@ -37,3 +38,6 @@ class MovieService:
             raise ValueError("Invalid pagination parameters")
 
         return self._repository.search_movies(filters=filters, limit=limit, offset=offset)
+
+    def get_movie_by_id(self, id: ObjectId) -> Movie | None:
+        return self._repository.get_movie_by_id(id)

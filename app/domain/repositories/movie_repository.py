@@ -1,6 +1,8 @@
 from typing import Dict, List
 from abc import ABC, abstractmethod
 
+from bson import ObjectId
+
 from app.domain.models.movie import Movie
 
 
@@ -19,4 +21,8 @@ class MovieRepository(ABC):
 
     @abstractmethod
     def count_movies(self) -> int:
+        pass
+
+    @abstractmethod
+    def get_movie_by_id(self, id: ObjectId) -> Movie | None:
         pass
