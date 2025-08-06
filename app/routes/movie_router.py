@@ -2,9 +2,9 @@ from bson import ObjectId
 from flask import Blueprint, redirect, request, jsonify, url_for
 from werkzeug.wrappers.response import Response
 from typing import Tuple
-from app.domain.models.movie import Movie
 from app.domain.services.movie_services import MovieService
 from app.infrastructure.mongo_movie_repository import MongoMovieRepository
+from app.utils.parser_query_params import parse_query_params
 
 INTERNAL_SERVER_ERROR_MSG = "Internal server error"
 PAGINATION_ERROR_MSG = "Invalid pagination parameters"
@@ -49,44 +49,28 @@ def create_movies() -> Tuple[Response, int] | Response:
 
 @movie_router.route('', methods=['GET'])
 def get_movies() -> Tuple[Response, int]:
-        movie_service = MovieService(MongoMovieRepository())
-        try:
-                filters = {}
-                for key in ['title', 'director', 'genre']:
-                        value = request.args.get(key)
-                        if value:
-                                filters[key] = value
+    movie_service = MovieService(MongoMovieRepository())
+    
+    try:
+        filters, limit, offset, sort_by, order = parse_query_params(request.args)
+        
+        movies = movie_service.get_movies(
+            filters=filters,
+            limit=limit,
+            offset=offset,
+            sort_by=sort_by,
+            order=order
+        )
 
-                # Parse year
-                year = request.args.get('year')
-                if year:
-                        try:
-                                filters['year'] = int(year)
-                        except ValueError:
-                                return jsonify({"message": "Year must be an integer"}), 400
+        if not movies:
+            return jsonify({"message": "No movies found"}), 404
 
-                # Parse rating
-                rating = request.args.get('rating')
-                if rating:
-                        try:
-                                filters['rating'] = float(rating)
-                        except ValueError:
-                                return jsonify({"message": "Rating must be a float"}), 400
+        return jsonify([m.model_dump() for m in movies]), 200
 
-                limit = request.args.get('limit', default=10, type=int)
-                offset = request.args.get('offset', default=0, type=int)
-
-                movies = movie_service.get_movies(filters=filters, limit=limit, offset=offset)
-
-                if not movies:
-                    return jsonify({"message": "No movies found"}), 404
-
-                return jsonify([m.model_dump() for m in movies]), 200
-
-        except ValueError as e:
-                return jsonify({"message": str(e)}), 400
-        except Exception:
-                return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
+    except ValueError as e:
+        return jsonify({"message": str(e)}), 400
+    except Exception:
+        return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
 
 @movie_router.route('/<id>', methods=['GET'])
 def get_movie_by_id(id: ObjectId) -> Tuple[Response, int]:
