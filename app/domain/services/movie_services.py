@@ -31,13 +31,19 @@ class MovieService:
             message = error.errors()[0].get("msg", "Invalid data")
 
             return message, 422
-    
-    def get_movies(self, filters: Dict[str, str | None], limit: int , offset: int) -> List[Movie]:
+
+    def get_movies(self, filters: Dict[str, str | None], limit: int, offset: int, sort_by: str, order: str) -> List[Movie]:
         total_movies = self._repository.count_movies()
         if limit <= 0 or offset < 0 or offset >= total_movies:
             raise ValueError("Invalid pagination parameters")
 
-        return self._repository.search_movies(filters=filters, limit=limit, offset=offset)
+        return self._repository.search_movies(
+            filters=filters,
+            limit=limit,
+            offset=offset,
+            sort_by=sort_by,
+            order=order
+        )
 
     def get_movie_by_id(self, id: ObjectId) -> Movie | None:
         return self._repository.get_movie_by_id(id)
