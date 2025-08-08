@@ -141,30 +141,3 @@ def test_add_movie_internal_error(client):
         response = client.post(ENDPOINT, json=payload)
         assert response.status_code == 500
         assert "Internal server error" in response.get_data(as_text=True)
-
-""" 
-TODO: WHEN IMPLEMENT FUNCTIONALITY GET BY TITLE, ADD TESTS FOR DUPLICATE MOVIES
-def test_add_movie_duplicate_movies(client):
-    payload = [{
-        "title": "Duplicate Title",
-        "plot": "Test",
-        "release_date": "2020",
-        "genre": ["Drama"],
-        "director": ["Someone"],
-        "rating": 4.0,
-        "poster": POSTER_URL_TEST
-    }, {
-        "title": "Duplicate Title",
-        "plot": "Test",
-        "release_date": "2020",
-        "genre": ["Drama"],
-        "director": ["Someone"],
-        "rating": 4.0,
-        "poster": POSTER_URL_TEST
-    }]
-
-    client.post(ENDPOINT, json=payload)
-    response = client.post(ENDPOINT, json=payload)
-    assert response.status_code == 409
-    assert "already exists" in response.get_data(as_text=True)
- """
