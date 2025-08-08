@@ -73,11 +73,12 @@ def get_movies() -> Tuple[Response, int]:
         return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
 
 @movie_router.route('/<id>', methods=['GET'])
-def get_movie_by_id(id: ObjectId) -> Tuple[Response, int]:
+def get_movie_by_id(id: str) -> Tuple[Response, int]:
         movie_service = MovieService(MongoMovieRepository())
         try:
-                movie = movie_service.get_movie_by_id(id)
-                
+                movie_id = ObjectId(id)
+                movie = movie_service.get_movie_by_id(movie_id)
+
                 if not movie:
                         return jsonify({"message": "Movie not found"}), 404
 
