@@ -2,6 +2,7 @@ from app.domain.models.movie import Movie
 from typing import List, Tuple, Dict
 from bson import ObjectId
 from pydantic import ValidationError
+from app.domain.models.movie_update import MovieUpdate
 from app.domain.repositories.movie_repository import MovieRepository
 
 class MovieService:
@@ -47,3 +48,18 @@ class MovieService:
 
     def get_movie_by_id(self, id: ObjectId) -> Movie | None:
         return self._repository.get_movie_by_id(id)
+
+    def update_movie(self, id: ObjectId, movie_data: Dict) -> Tuple[str, int]:
+        try:
+            movie_validated = MovieUpdate(**movie_data)
+
+            movie_dict = movie_validated.model_dump(exclude_unset=True)
+            
+            if not movie_dict:
+                return "No valid fields provided", 422
+
+            self._repository.update_movie(id, movie_dict)
+            return "Movie updated successfully", 200
+        except ValidationError as error:
+            message = error.errors()[0].get("msg", "Invalid data")
+            return message, 422

@@ -52,3 +52,6 @@ class MongoMovieRepository(MovieRepository):
         if document:
             return Movie.from_mongo(document)
         return None
+    
+    def update_movie(self, id: ObjectId, movie_data: Dict) -> None:
+        database.movies.update_one({"_id": id}, {"$set": movie_data})

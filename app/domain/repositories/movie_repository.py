@@ -26,3 +26,7 @@ class MovieRepository(ABC):
     @abstractmethod
     def get_movie_by_id(self, id: ObjectId) -> Movie | None:
         pass
+
+    @abstractmethod
+    def update_movie(self, id: ObjectId, movie_data: Dict) -> None:
+        pass

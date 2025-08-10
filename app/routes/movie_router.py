@@ -87,3 +87,20 @@ def get_movie_by_id(id: str) -> Tuple[Response, int]:
                 return jsonify({"message": "Invalid movie ID"}), 400
         except Exception:
                 return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
+
+@movie_router.route('/<id>', methods=['PATCH'])
+def update_movie(id: str) -> Tuple[Response, int]:
+        movie_service = MovieService(MongoMovieRepository())
+        
+        if not request.get_json():
+                return jsonify({"message": "No movie data provided"}), 422
+
+        movie_data = request.get_json()
+        try:
+                movie_id = ObjectId(id)
+                response_message, status_code = movie_service.update_movie(movie_id, movie_data)
+                return jsonify({"message": response_message}), status_code
+        except ValueError:
+                return jsonify({"message": "Invalid movie ID"}), 400
+        except Exception:
+                return jsonify({"message": INTERNAL_SERVER_ERROR_MSG}), 500
